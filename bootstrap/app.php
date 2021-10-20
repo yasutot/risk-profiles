@@ -97,6 +97,10 @@ $app->configure('app');
 
 $app->register(\Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
+if (class_exists('Laravel\Tinker\TinkerServiceProvider')) {
+    $app->register(Laravel\Tinker\TinkerServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
