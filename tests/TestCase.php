@@ -43,4 +43,13 @@ abstract class TestCase extends BaseTestCase
 
         $reflectionValue->setValue($mockedObj, $value);
     }
+
+    protected function getProtectedPropertyValue($object, string $property)
+    {
+        $reflection = new ReflectionObject($object);
+        $reflectionProperty = $reflection->getProperty($property);
+        $reflectionProperty->setAccessible(true);
+
+        return $reflectionProperty->getValue($object);
+    }
 }
