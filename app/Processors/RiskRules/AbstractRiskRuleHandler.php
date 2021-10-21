@@ -9,7 +9,7 @@ use App\Models\UserInformation;
 
 abstract class AbstractRiskRuleHandler implements RiskRuleHandler
 {
-    protected ?RiskRuleHandler $nextHandler;
+    protected ?RiskRuleHandler $nextHandler = null;
     protected UserInformation $userInformation;
     protected Operation $operation;
     protected int $value;
