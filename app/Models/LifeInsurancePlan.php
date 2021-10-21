@@ -5,12 +5,8 @@ namespace App\Models;
 use App\Processors\RiskRules\AgeHigherThan60;
 use App\Processors\RiskRules\AgeLowerThan30;
 use App\Processors\RiskRules\HasDependents;
-use App\Processors\RiskRules\HouseIsMortgaged;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\IsMarried;
-use App\Processors\RiskRules\NoHouse;
-use App\Processors\RiskRules\NoIncome;
-use App\Processors\RiskRules\NoVehicle;
 
 class LifeInsurancePlan extends AbstractInsurancePlan
 {
