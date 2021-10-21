@@ -2,10 +2,8 @@
 
 namespace App\Processors\RiskRules;
 
-use App\Enums\Operation;
-use App\Exceptions\IneligibleInsurancePlanException;
-use App\Exceptions\RiskRuleException;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 
 abstract class AbstractRiskRuleHandler implements RiskRuleHandler
 {
@@ -14,7 +12,7 @@ abstract class AbstractRiskRuleHandler implements RiskRuleHandler
     protected Operation $operation;
     protected int $value;
 
-    public function __construct(UserInformation $userInformation, Operation $operation, int $value)
+    public function __construct(UserInformation $userInformation, $operation, int $value)
     {
         $this->userInformation = $userInformation;
         $this->operation = $operation;
@@ -30,8 +28,8 @@ abstract class AbstractRiskRuleHandler implements RiskRuleHandler
 
     public function handle($accumulator = 0)
     {
-        if ($this->validate($accumulator)) {
-            $accumulator = $this->executeOperation($accumulator);
+        if ($this->validate()) {
+            $accumulator = $this->operation->execute($accumulator, $this->value);
         }
 
         if ($this->nextHandler) {
@@ -42,33 +40,4 @@ abstract class AbstractRiskRuleHandler implements RiskRuleHandler
     }
 
     public abstract function validate(): bool;
-
-    public function executeOperation($accumulator)
-    {
-        switch ($this->operation) {
-            case Operation::ADD():
-                return $this->addToAccumulator($accumulator);
-            case Operation::SUBTRACT():
-                return $this->subtractFromAccumulator($accumulator);
-            case Operation::DENY():
-                return $this->deny();
-            default:
-                throw new RiskRuleException('Operation not found.');
-        }
-    }
-
-    public function addToAccumulator($accumulator)
-    {
-        return $accumulator += $this->value;
-    }
-
-    public function subtractFromAccumulator($accumulator)
-    {
-        return $accumulator -= $this->value;
-    }
-
-    public function deny()
-    {
-        throw new IneligibleInsurancePlanException();
-    }
 }
