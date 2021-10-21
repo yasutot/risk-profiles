@@ -12,8 +12,8 @@ class UserInformation
     protected int $income;
     protected array $riskQuestions;
     protected MaritalStatus $maritalStatus;
-    protected ?House $house;
-    protected ?Vehicle $vehicle;
+    protected ?House $house = null;
+    protected ?Vehicle $vehicle = null;
 
     public function setAge(int $age): void
     {
