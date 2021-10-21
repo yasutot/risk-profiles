@@ -6,6 +6,7 @@ use App\Enums\Operation;
 use App\Enums\InsurancePlanValue;
 use App\Exceptions\IneligibleInsurancePlanException;
 use App\Models\UserInformation;
+use App\Processors\RiskRules\RiskRuleHandler;
 
 abstract class AbstractInsurancePlan
 {
@@ -56,26 +57,26 @@ abstract class AbstractInsurancePlan
 
     protected function calculate()
     {
-        $rulesChain = $this->buildChain();
+        $ruleObjects = $this->instantiateRules();
+
+        $rulesChain = $this->buildChain($ruleObjects);
 
         $baseValue = $this->baseValue();
 
         return $rulesChain->handle($baseValue);
     }
 
-    protected function buildChain()
+    protected function buildChain(array $ruleObjects): RiskRuleHandler
     {
-        $instantiatedRules = $this->instantiateRules();
+        $firstRule = array_shift($ruleObjects);
 
-        $firstRule = array_shift($instantiatedRules);
-
-        return array_reduce($instantiatedRules, function($chain, $rule) {
+        return array_reduce($ruleObjects, function($chain, $rule) {
             $chain->setNext($rule);
             return $chain;
         }, $firstRule);
     }
 
-    protected function instantiateRules()
+    protected function instantiateRules(): array
     {
         return array_map(function ($rule) {
             $ruleClass = $rule[0];
