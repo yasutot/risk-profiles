@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Enums\Operation;
 use App\Enums\InsurancePlanValue;
 use App\Exceptions\IneligibleInsurancePlanException;
+use App\Factories\RiskRuleHandlerFactory;
 use App\Models\UserInformation;
 use App\Processors\RiskRules\RiskRuleHandler;
 
@@ -13,16 +13,16 @@ abstract class AbstractInsurancePlan
     protected UserInformation $userInformation;
 
     /**
-     * @var array
+     * @var rules
      * Array of arrays, where the nested one should contain the rules used to calculate the insurance risk.
      * The first element is the risk rule class.
-     * The second element is the calculation operation.
-     * The third is the value used in the calculation.
+     * The second element is the operation class executed if the risk rule is validated.
+     * The third is the value used in the execution.
      * Example:
      * [
-     *     [NoHouse::class, 'deny', 0],
-     *     [AgeLowerThan30::class, 'add', 4],
-     *     [IncomeHigherThan200K, 'subtract', 3]
+     *     [NoHouse::class,        Deny::class,     0],
+     *     [AgeLowerThan30::class, Add::class,      4],
+     *     [IncomeHigherThan200K,  Subtract::class, 3]
      * ]
      */
     protected array $rules;
@@ -59,14 +59,19 @@ abstract class AbstractInsurancePlan
     {
         $ruleObjects = $this->instantiateRules();
 
-        $rulesChain = $this->buildChain($ruleObjects);
+        $rulesChain = $this->buildRiskRuleChain($ruleObjects);
 
         $baseValue = $this->baseValue();
 
         return $rulesChain->handle($baseValue);
     }
 
-    protected function buildChain(array $ruleObjects): RiskRuleHandler
+    /**
+     * Builds the chain of responsibility used to calculate the risk score.
+     * 
+     * @return RiskRuleHandler
+     */
+    protected function buildRiskRuleChain(array $ruleObjects): RiskRuleHandler
     {
         $firstRule = array_shift($ruleObjects);
 
@@ -76,14 +81,16 @@ abstract class AbstractInsurancePlan
         }, $firstRule);
     }
 
+    /**
+     * Creates an array with the instantiated RiskRuleHandlers defined in the rule property.
+     * 
+     * @return array
+     * 
+     */
     protected function instantiateRules(): array
     {
         return array_map(function ($rule) {
-            $ruleClass = $rule[0];
-            $operation = Operation::from($rule[1]);
-            $score = $rule[2];
-
-            return new $ruleClass($this->userInformation, $operation, $score);
+            return RiskRuleHandlerFactory::create($this->userInformation, $rule[0], $rule[1], $rule[2]);
         }, $this->rules);
     }
 }

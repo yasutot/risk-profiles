@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Processors\Operations\Add;
+use App\Processors\Operations\Deny;
+use App\Processors\Operations\Subtract;
 use App\Processors\RiskRules\AgeHigherThan60;
 use App\Processors\RiskRules\AgeLowerThan30;
 use App\Processors\RiskRules\HasDependents;
@@ -15,14 +18,14 @@ use App\Processors\RiskRules\NoVehicle;
 class DisabilityInsurancePlan extends AbstractInsurancePlan
 {
     protected array $rules = [
-        [NoIncome::class,             'deny',     0],
-        [NoVehicle::class,            'deny',     0],
-        [NoHouse::class,              'deny',     0],
-        [AgeHigherThan60::class,      'deny',     0],
-        [AgeLowerThan30::class,       'subtract', 2],
-        [IncomeHigherThan200K::class, 'subtract', 1],
-        [HouseIsMortgaged::class,     'add',      1],
-        [HasDependents::class,        'add',      1],
-        [IsMarried::class,            'subtract', 1]
+        [NoIncome::class,             Deny::class,     0],
+        [NoVehicle::class,            Deny::class,     0],
+        [NoHouse::class,              Deny::class,     0],
+        [AgeHigherThan60::class,      Deny::class,     0],
+        [AgeLowerThan30::class,       Subtract::class, 2],
+        [IncomeHigherThan200K::class, Subtract::class, 1],
+        [HouseIsMortgaged::class,     Add::class,      1],
+        [HasDependents::class,        Add::class,      1],
+        [IsMarried::class,            Subtract::class, 1]
     ];
 }
