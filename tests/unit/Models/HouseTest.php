@@ -8,7 +8,7 @@ use TestCase;
 
 class HouseTest extends TestCase
 {
-    public function test_get_year_returns_the_vehicle_year()
+    public function testGetOwnershipStatus()
     {
         $status = HouseOwnershipStatus::MORTGAGED();
         $house = new House($status);
