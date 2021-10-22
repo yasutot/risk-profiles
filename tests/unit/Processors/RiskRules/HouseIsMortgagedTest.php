@@ -3,34 +3,43 @@
 namespace Tests\Unit\Processors\RiskRules;
 
 use App\Enums\HouseOwnershipStatus;
-use App\Enums\Operation;
 use App\Models\House;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\HouseIsMortgaged;
 use TestCase;
 
 class HouseIsMortgagedTest extends TestCase
 {
-    public function test_validate()
+    protected $userInformation;
+    protected $operation;
+    protected $house;
+
+    public function setUp(): void
     {
-        $dataSet = [
+        $this->house = $this->createMock(House::class);
+        $this->userInformation = $this->createMock(UserInformation::class);
+        $this->operation = $this->createMock(Operation::class);
+    }
+
+    /**
+     * @dataProvider dataset
+     */
+    public function testValidate($input, $expected)
+    {
+        $this->house->method('getOwnershipStatus')->will($this->returnValue($input));
+        $this->userInformation->method('getHouse')->will($this->returnValue($this->house));
+
+        $riskRuleHandler = new HouseIsMortgaged($this->userInformation, $this->operation, rand(1,2));
+
+        $this->assertEquals($expected, $riskRuleHandler->validate());
+    }
+
+    public function dataSet()
+    {
+        return [
             [HouseOwnershipStatus::MORTGAGED(), true],
             [HouseOwnershipStatus::OWNED(), false]
         ];
-
-        foreach ($dataSet as $data) {
-            $house = $this->createMock(House::class);
-            $house->method('getOwnershipStatus')
-                ->will($this->returnValue($data[0]));
-
-            $ui = $this->createMock(UserInformation::class);
-            $ui->method('getHouse')
-                ->will($this->returnValue($house));
-
-            $operation = $this->createMock(Operation::class);
-            $riskRuleHandler = new HouseIsMortgaged($ui, $operation, rand(1,2));
-
-            $this->assertEquals($data[1], $riskRuleHandler->validate());
-        }
     }
 }

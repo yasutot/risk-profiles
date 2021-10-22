@@ -2,14 +2,28 @@
 
 namespace Tests\Unit\Processors\RiskRules;
 
-use App\Enums\Operation;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\NoIncome;
 use TestCase;
 
 class NoIncomeTest extends TestCase
 {
-    public function test_validate()
+    protected $userInformation;
+    protected $operation;
+
+    public function setUp(): void
+    {
+        $this->userInformation = $this->createMock(UserInformation::class);
+        $this->operation = $this->createMock(Operation::class);
+    }
+
+    /**
+     * @testWith
+     *      [0, true]
+     *      [1, false]
+     */
+    public function testValidate($input, $expected)
     {
         $dataSet = [
             [0, true],
@@ -17,13 +31,11 @@ class NoIncomeTest extends TestCase
         ];
 
         foreach ($dataSet as $data) {
-            $ui = $this->createMock(UserInformation::class);
-            $ui->method('getIncome')->will($this->returnValue($data[0]));
+            $this->userInformation->method('getIncome')->will($this->returnValue($input));
 
-            $operation = $this->createMock(Operation::class);
-            $riskHandler = new NoIncome($ui, $operation, rand(1,2));
+            $riskHandler = new NoIncome($this->userInformation, $this->operation, rand(1,2));
 
-            $this->assertEquals($data[1], $riskHandler->validate());
+            $this->assertEquals($expected, $riskHandler->validate());
         }
     }
 }

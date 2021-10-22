@@ -2,30 +2,34 @@
 
 namespace Tests\Unit\Processors\RiskRules;
 
-use App\Enums\Operation;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use TestCase;
 
 class IncomeHigherThan200KTest extends TestCase
 {
-    public function test_validate()
+    protected $userInformation;
+    protected $operation;
+
+    public function setUp(): void
     {
-        $dataSet = [
-            [199999, false],
-            [200000, false],
-            [200001, true]
-        ];
+        $this->userInformation = $this->createMock(UserInformation::class);
+        $this->operation = $this->createMock(Operation::class);
+    }
 
-        foreach ($dataSet as $data) {
-            $ui = $this->createMock(UserInformation::class);
-            $ui->method('getIncome')
-                ->will($this->returnValue($data[0]));
+    /**
+     * @testWith
+     *      [199999, false]
+     *      [200000, false]
+     *      [200001, true]
+     */
+    public function testValidate($input, $expected)
+    {
+        $this->userInformation->method('getIncome')->will($this->returnValue($input));
 
-            $operation = $this->createMock(Operation::class);
-            $riskHandler = new IncomeHigherThan200K($ui, $operation, rand(1,2));
+        $riskHandler = new IncomeHigherThan200K($this->userInformation, $this->operation, rand(1,2));
 
-            $this->assertEquals($data[1], $riskHandler->validate());
-        }
+        $this->assertEquals($expected, $riskHandler->validate());
     }
 }

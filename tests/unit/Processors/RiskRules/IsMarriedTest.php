@@ -3,28 +3,39 @@
 namespace Tests\Unit\Processors\RiskRules;
 
 use App\Enums\MaritalStatus;
-use App\Enums\Operation;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\IsMarried;
 use TestCase;
 
 class IsMarriedTest extends TestCase
 {
-    public function test_validate()
+    protected $userInformation;
+    protected $operation;
+
+    public function setUp(): void
     {
-        $dataSet = [
+        $this->userInformation = $this->createMock(UserInformation::class);
+        $this->operation = $this->createMock(Operation::class);
+    }
+
+    /**
+     * @dataProvider dataset
+     */
+    public function testValidate($input, $expected)
+    {
+        $this->userInformation->method('getMaritalStatus')->will($this->returnValue($input));
+
+        $riskRuleHandler = new IsMarried($this->userInformation, $this->operation, rand(1,2));
+
+        $this->assertEquals($expected, $riskRuleHandler->validate());
+    }
+
+    public function dataSet()
+    {
+        return [
             [MaritalStatus::MARRIED(), true],
             [MaritalStatus::SINGLE(), false]
         ];
-
-        foreach ($dataSet as $data) {
-            $ui = $this->createMock(UserInformation::class);
-            $ui->method('getMaritalStatus')->will($this->returnValue($data[0]));
-
-            $operation = $this->createMock(Operation::class);
-            $riskRuleHandler = new IsMarried($ui, $operation, rand(1,2));
-
-            $this->assertEquals($data[1], $riskRuleHandler->validate());
-        }
     }
 }

@@ -2,29 +2,34 @@
 
 namespace Tests\Unit\Processors\RiskRules;
 
-use App\Enums\Operation;
 use App\Models\UserInformation;
+use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\AgeLowerThan30;
 use TestCase;
 
 class AgeLowerThan30Test extends TestCase
 {
-    public function test_validate()
+    protected $userInformation;
+    protected $operation;
+
+    public function setUp(): void
     {
-        $dataSet = [
-            [29, true],
-            [30, false],
-            [31, false]
-        ];
+        $this->userInformation = $this->createMock(UserInformation::class);
+        $this->operation = $this->createMock(Operation::class);
+    }
 
-        foreach ($dataSet as $data) {
-            $ui = $this->createMock(UserInformation::class);
-            $ui->method('getAge')->will($this->returnValue($data[0]));
+    /**
+     * @testWith
+     *      [29, true]
+     *      [30, false]
+     *      [31, false]
+     */
+    public function testValidate($input, $expected)
+    {
+        $this->userInformation->method('getAge')->will($this->returnValue($input));
 
-            $operation = $this->createMock(Operation::class);
-            $riskRuleHandler = new AgeLowerThan30($ui, $operation, rand(1,2));
+        $riskRuleHandler = new AgeLowerThan30($this->userInformation, $this->operation, rand(1,2));
 
-            $this->assertEquals($data[1], $riskRuleHandler->validate());
-        }
+        $this->assertEquals($expected, $riskRuleHandler->validate());
     }
 }

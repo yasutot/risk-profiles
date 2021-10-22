@@ -7,7 +7,7 @@ use TestCase;
 
 class VehicleTest extends TestCase
 {
-    public function test_get_year_returns_the_vehicle_year()
+    public function testGetYearReturnsTheVehicleYear()
     {
         $year = 2000;
         $vehicle = new Vehicle($year);

@@ -18,7 +18,7 @@ class UserInformationTest extends TestCase
         $this->userInformation = new UserInformation();
     }
 
-    public function test_age_setter_throws_an_exception_when_age_is_negative()
+    public function testAgeSetterThrowsAnExceptionWhenAgeIsNegative()
     {
         $this->expectException(UserInformationException::class);
 
@@ -26,7 +26,7 @@ class UserInformationTest extends TestCase
         $this->userInformation->setAge($age);
     }
 
-    public function test_age_getter_and_setter()
+    public function testAgeGetterAndSetter()
     {
         $age = rand(0, 10);
         $this->userInformation->setAge($age);
@@ -34,7 +34,7 @@ class UserInformationTest extends TestCase
         $this->assertEquals($age, $this->userInformation->getAge());
     }
 
-    public function test_dependents_setter_throws_an_exception_when_dependents_is_negative()
+    public function testDependentsSetterThrowsAnExceptionWhenDependentsIsNegative()
     {
         $this->expectException(UserInformationException::class);
 
@@ -42,7 +42,7 @@ class UserInformationTest extends TestCase
         $this->userInformation->setDependents($dependents);
     }
 
-    public function test_dependents_getter_and_setter()
+    public function testDependentsGetterAndSetter()
     {
         $dependents = rand(0, 10);
         $this->userInformation->setDependents($dependents);
@@ -50,7 +50,7 @@ class UserInformationTest extends TestCase
         $this->assertEquals($dependents, $this->userInformation->getDependents());
     }
 
-    public function test_income_setter_throws_an_exception_when_income_is_negative()
+    public function testIncomeSetterThrowsAnExceptionWhenIncomeIsNegative()
     {
         $this->expectException(UserInformationException::class);
 
@@ -58,7 +58,7 @@ class UserInformationTest extends TestCase
         $this->userInformation->setIncome($income);
     }
 
-    public function test_income_getter_and_setter()
+    public function testIncomeGetterAndSetter()
     {
         $income = rand(0, 10);
         $this->userInformation->setIncome($income);
@@ -66,23 +66,21 @@ class UserInformationTest extends TestCase
         $this->assertEquals($income, $this->userInformation->getIncome());
     }
 
-    public function test_risk_questions_setter_throws_an_exception_when_data_is_invalid()
+    /**
+     * @testWith
+     *      [[0,0,0,0], "App\\Exceptions\\UserInformationException", "Risk Questions should have 3 items."]
+     *      [[0,0],     "App\\Exceptions\\UserInformationException", "Risk Questions should have 3 items."]
+     *      [[1,2,3],   "App\\Exceptions\\UserInformationException", "Risk Questions items should be 0 or 1"]
+     */
+    public function testRiskQuestionsSetterThrowsAnExceptionWhenDataIsInvalid($riskQuestions, $exception, $message)
     {
-        $testData = [
-            [[0,0,0,0], UserInformationException::class, 'Risk Questions should have 3 items.'],
-            [[0,0,0],   UserInformationException::class, 'Risk Questions should have 3 items.'],
-            [[1,2,3],   UserInformationException::class, 'Risk Questions items should be 0 or 1'],
-        ];
+        $this->expectException($exception);
+        $this->expectExceptionMessage($message);
 
-        foreach ($testData as $data) {
-            $this->expectException($data[1]);
-            $this->expectExceptionMessage($data[2]);
-
-            $this->userInformation->setRiskQuestions($data[0]);
-        }
+        $this->userInformation->setRiskQuestions($riskQuestions);
     }
 
-    public function test_marital_status_getter_and_setter()
+    public function testMaritalStatusGetterAndSetter()
     {
         $maritalStatus = MaritalStatus::MARRIED();
         $this->userInformation->setMaritalStatus($maritalStatus);
@@ -90,7 +88,7 @@ class UserInformationTest extends TestCase
         $this->assertEquals($maritalStatus, $this->userInformation->getMaritalStatus());
     }
 
-    public function test_house_getter_and_setter()
+    public function testHouseGetterAndSetter()
     {
         $house = $this->createMock(House::class);
         $this->userInformation->setHouse($house);
@@ -98,7 +96,7 @@ class UserInformationTest extends TestCase
         $this->assertEquals($house, $this->userInformation->getHouse());
     }
 
-    public function test_vehicle_getter_and_setter()
+    public function testVehicleGetterAndSetter()
     {
         $vehicle = $this->createMock(Vehicle::class);
         $this->userInformation->setVehicle($vehicle);
@@ -106,9 +104,9 @@ class UserInformationTest extends TestCase
         $this->assertEquals($vehicle, $this->userInformation->getVehicle());
     }
 
-    public function test_risk_questions_getter_and_setter()
+    public function testRiskQuestionsGetterAndSetter()
     {
-        $expectedRiskQuestions = [rand(0,1), rand(0,1), rand(0,1)];
+        $expectedRiskQuestions = [0, 1, 0];
         $this->userInformation->setRiskQuestions($expectedRiskQuestions);
 
         $riskQuestions = $this->userInformation->getRiskQuestions();
@@ -116,31 +114,5 @@ class UserInformationTest extends TestCase
         for ($i=0; $i < count($riskQuestions); $i++) { 
             $this->assertEquals($expectedRiskQuestions[$i], $riskQuestions[$i]);
         }
-    }
-
-    public function test_validate_risk_questions_throws_an_exception_when_data_it_does_not_have_3_elements()
-    {
-        $this->expectException(UserInformationException::class);
-        $this->expectExceptionMessage('Risk Questions should have 3 items.');
-
-        $userInformation = $this->createMock(UserInformation::class);
-
-        $reflection = $this->getReflection(UserInformation::class);
-        $validateRiskQuestions = $this->getProtectedMethod($reflection, 'validateRiskQuestions');
-
-        $validateRiskQuestions->invokeArgs($userInformation, [[1,1]]);
-    }
-
-    public function test_validate_risk_questions_throws_an_exception_when_data_is_invalid()
-    {
-        $this->expectException(UserInformationException::class);
-        $this->expectExceptionMessage('Risk Questions items should be 0 or 1.');
-
-        $userInformation = $this->createMock(UserInformation::class);
-
-        $reflection = $this->getReflection(UserInformation::class);
-        $validateRiskQuestions = $this->getProtectedMethod($reflection, 'validateRiskQuestions');
-
-        $validateRiskQuestions->invokeArgs($userInformation, [[1,1,2]]);
     }
 }

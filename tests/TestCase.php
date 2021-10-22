@@ -16,34 +16,6 @@ abstract class TestCase extends BaseTestCase
         return require __DIR__.'/../bootstrap/app.php';
     }
 
-    protected function getReflection($class)
-    {
-        if ($this->reflectionClass) {
-            return $this->reflectionClass;
-        }
-
-        $this->reflectionClass = new ReflectionClass($class);
-
-        return $this->reflectionClass;
-    }
-
-    protected function getProtectedMethod($reflection, string $methodName)
-    {
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-
-        return $method;
-    }
-
-    protected function setProtectedPropertyValue($reflection, $mockedObj, string $property, $value)
-    {
-        $reflectionValue = $reflection->getProperty($property);
-
-        $reflectionValue->setAccessible(true);
-
-        $reflectionValue->setValue($mockedObj, $value);
-    }
-
     protected function getProtectedPropertyValue($object, string $property)
     {
         $reflection = new ReflectionObject($object);
