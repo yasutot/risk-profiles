@@ -20,22 +20,29 @@ abstract class AbstractInsurancePlan
      * The third is the value used in the execution.
      * Example:
      * [
-     *     [NoHouse::class,        Deny::class,     0],
-     *     [AgeLowerThan30::class, Add::class,      4],
-     *     [IncomeHigherThan200K,  Subtract::class, 3]
+     *     ['rule' => NoHouse::class,        'operation' => Deny::class,     'score' => 0],
+     *     ['rule' => AgeLowerThan30::class, 'operation' => Add::class,      'score' => 4],
+     *     ['rule' => IncomeHigherThan200K,  'operation' => Subtract::class, 'score' => 3]
      * ]
      */
-    protected array $rules;
+    protected array $rules = [];
+    protected RiskRuleHandler $riskRuleChain;
 
     public function __construct(UserInformation $userInformation)
     {
         $this->userInformation = $userInformation;
+
+        $factory = new RiskRuleHandlerFactory();
+        $riskRuleObjects = $factory->createMultipleFromArray($this->userInformation, $this->rules);
+        $this->riskRuleChain = $factory->createChain($riskRuleObjects);
     }
 
     public function evaluate()
     {
         try {
-            $score = $this->calculate();
+            $baseValue = $this->baseValue();
+
+            $score = $this->riskRuleChain->handle($baseValue);
 
             if ($score <= 0) {
                 return InsurancePlanValue::ECONOMIC();
@@ -55,42 +62,9 @@ abstract class AbstractInsurancePlan
         return array_sum($this->userInformation->getRiskQuestions());
     }
 
-    protected function calculate()
-    {
-        $ruleObjects = $this->instantiateRules();
+    protected function createChain() {
+        $riskRuleObjects = $this->riskRuleFactory->createMultipleFromArray($this->userInformation, $this->rules);
 
-        $rulesChain = $this->buildRiskRuleChain($ruleObjects);
-
-        $baseValue = $this->baseValue();
-
-        return $rulesChain->handle($baseValue);
-    }
-
-    /**
-     * Builds the chain of responsibility used to calculate the risk score.
-     * 
-     * @return RiskRuleHandler
-     */
-    protected function buildRiskRuleChain(array $ruleObjects): RiskRuleHandler
-    {
-        $firstRule = array_shift($ruleObjects);
-
-        return array_reduce($ruleObjects, function($chain, $rule) {
-            $chain->setNext($rule);
-            return $chain;
-        }, $firstRule);
-    }
-
-    /**
-     * Creates an array with the instantiated RiskRuleHandlers defined in the rule property.
-     * 
-     * @return array
-     * 
-     */
-    protected function instantiateRules(): array
-    {
-        return array_map(function ($rule) {
-            return RiskRuleHandlerFactory::create($this->userInformation, $rule[0], $rule[1], $rule[2]);
-        }, $this->rules);
+        return $this->riskRuleFactory->createChain($riskRuleObjects);
     }
 }

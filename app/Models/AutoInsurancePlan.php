@@ -16,12 +16,12 @@ use App\Processors\RiskRules\VehicleProducedAtLast5Years;
 class AutoInsurancePlan extends AbstractInsurancePlan
 {
     protected array $rules = [
-        [NoIncome::class,                    Deny::class,     0],
-        [NoVehicle::class,                   Deny::class,     0],
-        [NoHouse::class,                     Deny::class,     0],
-        [AgeLowerThan30::class,              Subtract::class, 2],
-        [AgeBetween30And40::class,           Subtract::class, 1],
-        [IncomeHigherThan200K::class,        Subtract::class, 1],
-        [VehicleProducedAtLast5Years::class, Add::class,      1]
+        ['rule' => NoIncome::class,                    'operation' => Deny::class,     'score' => 0],
+        ['rule' => NoVehicle::class,                   'operation' => Deny::class,     'score' => 0],
+        ['rule' => NoHouse::class,                     'operation' => Deny::class,     'score' => 0],
+        ['rule' => AgeLowerThan30::class,              'operation' => Subtract::class, 'score' => 2],
+        ['rule' => AgeBetween30And40::class,           'operation' => Subtract::class, 'score' => 1],
+        ['rule' => IncomeHigherThan200K::class,        'operation' => Subtract::class, 'score' => 1],
+        ['rule' => VehicleProducedAtLast5Years::class, 'operation' => Add::class,      'score' => 1]
     ];
 }

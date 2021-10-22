@@ -14,10 +14,10 @@ use App\Processors\RiskRules\IsMarried;
 class LifeInsurancePlan extends AbstractInsurancePlan
 {
     protected array $rules = [
-        [AgeHigherThan60::class,      Deny::class,     0],
-        [AgeLowerThan30::class,       Subtract::class, 2],
-        [IncomeHigherThan200K::class, Subtract::class, 1],
-        [HasDependents::class,        Add::class,      1],
-        [IsMarried::class,            Add::class,      1]
+        ['rule' => AgeHigherThan60::class,      'operation' => Deny::class,     'score' => 0],
+        ['rule' => AgeLowerThan30::class,       'operation' => Subtract::class, 'score' => 2],
+        ['rule' => IncomeHigherThan200K::class, 'operation' => Subtract::class, 'score' => 1],
+        ['rule' => HasDependents::class,        'operation' => Add::class,      'score' => 1],
+        ['rule' => IsMarried::class,            'operation' => Add::class,      'score' => 1]
     ];
 }

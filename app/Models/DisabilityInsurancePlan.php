@@ -18,14 +18,14 @@ use App\Processors\RiskRules\NoVehicle;
 class DisabilityInsurancePlan extends AbstractInsurancePlan
 {
     protected array $rules = [
-        [NoIncome::class,             Deny::class,     0],
-        [NoVehicle::class,            Deny::class,     0],
-        [NoHouse::class,              Deny::class,     0],
-        [AgeHigherThan60::class,      Deny::class,     0],
-        [AgeLowerThan30::class,       Subtract::class, 2],
-        [IncomeHigherThan200K::class, Subtract::class, 1],
-        [HouseIsMortgaged::class,     Add::class,      1],
-        [HasDependents::class,        Add::class,      1],
-        [IsMarried::class,            Subtract::class, 1]
+        ['rule' => NoIncome::class,             'operation' => Deny::class,     'score' => 0],
+        ['rule' => NoVehicle::class,            'operation' => Deny::class,     'score' => 0],
+        ['rule' => NoHouse::class,              'operation' => Deny::class,     'score' => 0],
+        ['rule' => AgeHigherThan60::class,      'operation' => Deny::class,     'score' => 0],
+        ['rule' => AgeLowerThan30::class,       'operation' => Subtract::class, 'score' => 2],
+        ['rule' => IncomeHigherThan200K::class, 'operation' => Subtract::class, 'score' => 1],
+        ['rule' => HouseIsMortgaged::class,     'operation' => Add::class,      'score' => 1],
+        ['rule' => HasDependents::class,        'operation' => Add::class,      'score' => 1],
+        ['rule' => IsMarried::class,            'operation' => Subtract::class, 'score' => 1]
     ];
 }
