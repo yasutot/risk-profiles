@@ -6,8 +6,12 @@ class VehicleProducedAtLast5Years extends AbstractRiskRuleHandler
 {
     public function validate(): bool
     {
-        $year = $this->userInformation->getVehicle()->getYear();
+        $vehicle = $this->userInformation->getVehicle();
 
-        return $year >= date('Y') - 5;
+        if ($vehicle) {
+            return $vehicle->getYear() >= date('Y') - 5;
+        }
+
+        return false;
     }
 }

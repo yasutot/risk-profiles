@@ -8,8 +8,12 @@ class HouseIsMortgaged extends AbstractRiskRuleHandler
 {
     public function validate(): bool
     {
-        $status = $this->userInformation->getHouse()->getOwnershipStatus();
+        $house = $this->userInformation->getHouse();
 
-        return $status == HouseOwnershipStatus::MORTGAGED();
+        if($house) {
+            return $house->getOwnershipStatus() == HouseOwnershipStatus::MORTGAGED();
+        }
+
+        return false;
     }
 }
