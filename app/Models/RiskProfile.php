@@ -17,7 +17,7 @@ class RiskProfile
         $this->userInformation = $userInformation;
     }
 
-    public function setInsurancePlanSuggestions()
+    public function setInsurancePlan()
     {
         $this->autoInsurancePlan = (new AutoInsurancePlan($this->userInformation))->evaluate();
         $this->lifeInsurancePlan = (new LifeInsurancePlan($this->userInformation))->evaluate();

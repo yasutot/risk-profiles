@@ -13,7 +13,7 @@ class RiskProfileService
 
         $riskProfile = new RiskProfile($userInformation);
 
-        $riskProfile->setInsurancePlanSuggestions();
+        $riskProfile->setInsurancePlan();
 
         return $riskProfile;
     }
