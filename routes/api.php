@@ -13,6 +13,4 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
-});
+$router->post('/api/v1/risk-profiles', 'RiskProfileController@create');
