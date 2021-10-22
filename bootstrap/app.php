@@ -23,7 +23,7 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
+$app->withFacades();
 
 // $app->withEloquent();
 
@@ -96,7 +96,7 @@ $app->configure('app');
 // $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(\Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
-
+$app->register(\Anik\Form\FormRequestServiceProvider::class);
 if (class_exists('Laravel\Tinker\TinkerServiceProvider')) {
     $app->register(Laravel\Tinker\TinkerServiceProvider::class);
 }
