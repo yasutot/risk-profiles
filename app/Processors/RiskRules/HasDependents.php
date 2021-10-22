@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class HasDependents extends AbstractRiskRuleHandler
+class HasDependents extends RiskRuleHandler
 {
     public function validate(): bool
     {

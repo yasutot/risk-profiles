@@ -4,7 +4,7 @@ namespace App\Processors\RiskRules;
 
 use App\Enums\HouseOwnershipStatus;
 
-class HouseIsMortgaged extends AbstractRiskRuleHandler
+class HouseIsMortgaged extends RiskRuleHandler
 {
     public function validate(): bool
     {

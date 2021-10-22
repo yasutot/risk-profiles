@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class NoVehicle extends AbstractRiskRuleHandler
+class NoVehicle extends RiskRuleHandler
 {
     public function validate(): bool
     {

@@ -4,7 +4,7 @@ namespace App\Processors\RiskRules;
 
 use App\Enums\MaritalStatus;
 
-class IsMarried extends AbstractRiskRuleHandler
+class IsMarried extends RiskRuleHandler
 {
     public function validate(): bool
     {

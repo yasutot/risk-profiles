@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class IncomeHigherThan200K extends AbstractRiskRuleHandler
+class IncomeHigherThan200K extends RiskRuleHandler
 {
     public function validate(): bool
     {

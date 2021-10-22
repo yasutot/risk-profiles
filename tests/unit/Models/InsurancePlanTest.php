@@ -4,7 +4,7 @@ namespace Tests\Unit\Models;
 
 use App\Models\UserInformation;
 use App\Processors\Operations\Operation;
-use App\Processors\RiskRules\AbstractRiskRuleHandler;
+use App\Processors\RiskRules\RiskRuleHandler;
 use TestCase;
 
 class InsurancePlanTest extends TestCase
@@ -26,7 +26,7 @@ class InsurancePlanTest extends TestCase
 
         foreach ($rules as $rule) {
             $this->assertCount(3, $rule);
-            $this->assertTrue(is_subclass_of($rule['rule'], AbstractRiskRuleHandler::class, true));
+            $this->assertTrue(is_subclass_of($rule['rule'], RiskRuleHandler::class, true));
             $this->assertTrue(is_subclass_of($rule['operation'], Operation::class));
             $this->assertIsInt($rule['score']);
         }

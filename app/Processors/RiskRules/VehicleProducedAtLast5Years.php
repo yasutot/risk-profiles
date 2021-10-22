@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class VehicleProducedAtLast5Years extends AbstractRiskRuleHandler
+class VehicleProducedAtLast5Years extends RiskRuleHandler
 {
     public function validate(): bool
     {

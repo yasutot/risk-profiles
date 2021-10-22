@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class NoHouse extends AbstractRiskRuleHandler
+class NoHouse extends RiskRuleHandler
 {
     public function validate(): bool
     {

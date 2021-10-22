@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class AgeHigherThan60 extends AbstractRiskRuleHandler
+class AgeHigherThan60 extends RiskRuleHandler
 {
     public function validate(): bool
     {

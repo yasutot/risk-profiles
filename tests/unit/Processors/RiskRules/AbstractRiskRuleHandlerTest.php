@@ -4,11 +4,11 @@ namespace Tests\Unit\Processors\RiskRules;
 
 use App\Models\UserInformation;
 use App\Processors\Operations\Operation;
-use App\Processors\RiskRules\AbstractRiskRuleHandler;
+use App\Processors\RiskRules\RiskRuleHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use TestCase;
 
-class StubRiskRuleHandler extends AbstractRiskRuleHandler
+class StubRiskRuleHandler extends RiskRuleHandler
 {
     public function __construct(UserInformation $ui, Operation $operation, int $value)
     {
@@ -20,7 +20,7 @@ class StubRiskRuleHandler extends AbstractRiskRuleHandler
     }
 }
 
-class AbstractRiskRuleHandlerTest extends TestCase
+class RiskRuleHandlerTest extends TestCase
 {
     protected MockObject $userInformation;
     protected MockObject $operation;

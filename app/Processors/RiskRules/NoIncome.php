@@ -2,7 +2,7 @@
 
 namespace App\Processors\RiskRules;
 
-class NoIncome extends AbstractRiskRuleHandler
+class NoIncome extends RiskRuleHandler
 {
     public function validate(): bool
     {

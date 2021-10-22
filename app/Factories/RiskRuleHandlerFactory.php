@@ -3,12 +3,12 @@
 namespace App\Factories;
 
 use App\Models\UserInformation;
-use App\Processors\RiskRules\RiskRuleHandler;
+use App\Processors\RiskRules\RiskRuleHandlerInterface;
 
 class RiskRuleHandlerFactory
 {
     public function create(
-        UserInformation $userInformation, $riskRuleHandlerClass, $operationClass, int $value): RiskRuleHandler
+        UserInformation $userInformation, $riskRuleHandlerClass, $operationClass, int $value): RiskRuleHandlerInterface
     {
         $operation = new $operationClass();
 
@@ -34,9 +34,9 @@ class RiskRuleHandlerFactory
     /**
      * Builds the chain of responsibility used to calculate the risk score.
      * @param array $riskRuleHandlers An array of RiskRuleHandler objects in the chain's order
-     * @return RiskRuleHandler
+     * @return RiskRuleHandlerInterface
      */
-    public function createChain(array $riskRuleHandlers): RiskRuleHandler
+    public function createChain(array $riskRuleHandlers): RiskRuleHandlerInterface
     {
         $firstRule = array_shift($riskRuleHandlers);
 
