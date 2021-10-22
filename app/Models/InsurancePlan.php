@@ -62,7 +62,8 @@ abstract class InsurancePlan
         return array_sum($this->userInformation->getRiskQuestions());
     }
 
-    protected function createChain() {
+    protected function createChain()
+    {
         $riskRuleObjects = $this->riskRuleFactory->createMultipleFromArray($this->userInformation, $this->rules);
 
         return $this->riskRuleFactory->createChain($riskRuleObjects);
