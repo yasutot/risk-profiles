@@ -8,7 +8,7 @@ use App\Factories\RiskRuleHandlerFactory;
 use App\Models\UserInformation;
 use App\Processors\RiskRules\RiskRuleHandler;
 
-abstract class AbstractInsurancePlan
+abstract class InsurancePlan
 {
     protected UserInformation $userInformation;
 

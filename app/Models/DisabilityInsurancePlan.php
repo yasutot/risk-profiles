@@ -15,7 +15,7 @@ use App\Processors\RiskRules\NoHouse;
 use App\Processors\RiskRules\NoIncome;
 use App\Processors\RiskRules\NoVehicle;
 
-class DisabilityInsurancePlan extends AbstractInsurancePlan
+class DisabilityInsurancePlan extends InsurancePlan
 {
     protected array $rules = [
         ['rule' => NoIncome::class,             'operation' => Deny::class,     'score' => 0],

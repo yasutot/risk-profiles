@@ -13,7 +13,7 @@ use App\Processors\RiskRules\NoIncome;
 use App\Processors\RiskRules\NoVehicle;
 use App\Processors\RiskRules\VehicleProducedAtLast5Years;
 
-class AutoInsurancePlan extends AbstractInsurancePlan
+class AutoInsurancePlan extends InsurancePlan
 {
     protected array $rules = [
         ['rule' => NoIncome::class,                    'operation' => Deny::class,     'score' => 0],

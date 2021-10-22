@@ -11,7 +11,7 @@ use App\Processors\RiskRules\HasDependents;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\IsMarried;
 
-class LifeInsurancePlan extends AbstractInsurancePlan
+class LifeInsurancePlan extends InsurancePlan
 {
     protected array $rules = [
         ['rule' => AgeHigherThan60::class,      'operation' => Deny::class,     'score' => 0],
