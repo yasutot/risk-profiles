@@ -2,33 +2,55 @@
 
 namespace Tests\Unit\Models;
 
+use App\Enums\InsurancePlanValue;
+use App\Exceptions\IneligibleInsurancePlanException;
+use App\Models\InsurancePlan;
 use App\Models\UserInformation;
-use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\RiskRuleHandler;
 use TestCase;
 
 class InsurancePlanTest extends TestCase
 {
-    /**
-     * @testWith
-     *      ["App\\Models\\AutoInsurancePlan"]
-     *      ["App\\Models\\DisabilityInsurancePlan"]
-     *      ["App\\Models\\HomeInsurancePlan"]
-     *      ["App\\Models\\LifeInsurancePlan"]
-     */
-    public function testRules($insurancePlan)
+    protected $insurance;
+    protected $riskRuleHandlerMock;
+
+    public function setUp(): void
     {
-        $ui = $this->createMock(UserInformation::class);
-        $insurancePlan = new $insurancePlan($ui);
-        $rules = $this->getProtectedPropertyValue($insurancePlan, 'rules');
+        $this->riskRuleHandlerMock = $this->createMock(RiskRuleHandler::class);
 
-        $this->assertNotEmpty($rules);
+        $userInformation = $this->createMock(UserInformation::class);
 
-        foreach ($rules as $rule) {
-            $this->assertCount(3, $rule);
-            $this->assertTrue(is_subclass_of($rule['rule'], RiskRuleHandler::class, true));
-            $this->assertTrue(is_subclass_of($rule['operation'], Operation::class));
-            $this->assertIsInt($rule['score']);
-        }
+        $this->insurance = $this->getMockForAbstractClass(InsurancePlan::class, [$userInformation]);
+        $this->insurance->method('riskRuleHandlerChain')->will($this->returnValue($this->riskRuleHandlerMock));
+    }
+
+    /**
+     * @dataProvider validateDataProvider
+     */
+    public function testValidate($input, $expected)
+    {
+        $this->riskRuleHandlerMock->method('handle')->will($this->returnValue($input));
+
+        $this->assertEquals($expected, $this->insurance->evaluate());
+    }
+
+    public function validateDataProvider()
+    {
+        return [
+            [-1, InsurancePlanValue::ECONOMIC()],
+            [0, InsurancePlanValue::ECONOMIC()],
+            [1, InsurancePlanValue::REGULAR()],
+            [2, InsurancePlanValue::REGULAR()],
+            [3, InsurancePlanValue::RESPONSIBLE()],
+        ];
+    }
+
+    public function testValidateReturnsIneligible()
+    {
+        $this->riskRuleHandlerMock
+            ->method('handle')
+            ->will($this->throwException(new IneligibleInsurancePlanException()));
+
+        $this->assertEquals(InsurancePlanValue::INELIGIBLE(), $this->insurance->evaluate());
     }
 }

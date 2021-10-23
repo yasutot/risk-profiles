@@ -10,14 +10,16 @@ use App\Processors\RiskRules\AgeLowerThan30;
 use App\Processors\RiskRules\HasDependents;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\IsMarried;
+use App\Processors\RiskRules\RiskRuleHandler;
 
 class LifeInsurancePlan extends InsurancePlan
 {
-    protected array $rules = [
-        ['rule' => AgeHigherThan60::class,      'operation' => Deny::class,     'score' => 0],
-        ['rule' => AgeLowerThan30::class,       'operation' => Subtract::class, 'score' => 2],
-        ['rule' => IncomeHigherThan200K::class, 'operation' => Subtract::class, 'score' => 1],
-        ['rule' => HasDependents::class,        'operation' => Add::class,      'score' => 1],
-        ['rule' => IsMarried::class,            'operation' => Add::class,      'score' => 1]
-    ];
+    public function riskRuleHandlerChain(): RiskRuleHandler
+    {
+        return       (new AgeHigherThan60($this->userInformation,      new Deny(),     0))
+            ->setNext(new AgeLowerThan30($this->userInformation,       new Subtract(), 2))
+            ->setNext(new IncomeHigherThan200K($this->userInformation, new Subtract(), 1))
+            ->setNext(new HasDependents($this->userInformation,        new Add(),      1))
+            ->setNext(new IsMarried($this->userInformation,            new Add(),      1));
+    }
 }

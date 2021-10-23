@@ -11,17 +11,19 @@ use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\NoHouse;
 use App\Processors\RiskRules\NoIncome;
 use App\Processors\RiskRules\NoVehicle;
+use App\Processors\RiskRules\RiskRuleHandler;
 use App\Processors\RiskRules\VehicleProducedAtLast5Years;
 
 class AutoInsurancePlan extends InsurancePlan
 {
-    protected array $rules = [
-        ['rule' => NoIncome::class,                    'operation' => Deny::class,     'score' => 0],
-        ['rule' => NoVehicle::class,                   'operation' => Deny::class,     'score' => 0],
-        ['rule' => NoHouse::class,                     'operation' => Deny::class,     'score' => 0],
-        ['rule' => AgeLowerThan30::class,              'operation' => Subtract::class, 'score' => 2],
-        ['rule' => AgeBetween30And40::class,           'operation' => Subtract::class, 'score' => 1],
-        ['rule' => IncomeHigherThan200K::class,        'operation' => Subtract::class, 'score' => 1],
-        ['rule' => VehicleProducedAtLast5Years::class, 'operation' => Add::class,      'score' => 1]
-    ];
+    public function riskRuleHandlerChain(): RiskRuleHandler
+    {
+        return       (new NoIncome($this->userInformation,                    new Deny(),     0))
+            ->setNext(new NoVehicle($this->userInformation,                   new Deny(),     0))
+            ->setNext(new NoHouse($this->userInformation,                     new Deny(),     0))
+            ->setNext(new AgeLowerThan30($this->userInformation,              new Subtract(), 2))
+            ->setNext(new AgeBetween30And40($this->userInformation,           new Subtract(), 1))
+            ->setNext(new IncomeHigherThan200K($this->userInformation,        new Subtract(), 1))
+            ->setNext(new VehicleProducedAtLast5Years($this->userInformation, new Add(),      1));
+    }
 }
