@@ -24,7 +24,7 @@ class RiskProfileServiceTest extends TestCase
         return [
             'income' => 0,
             'house' => [
-            'ownership_status' => 'owned'
+                'ownership_status' => 'owned'
             ],
             'vehicle' => [
                 'year' => 2000
