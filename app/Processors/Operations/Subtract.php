@@ -2,10 +2,10 @@
 
 namespace App\Processors\Operations;
 
-class Subtract implements Operation
+class Subtract extends Operation
 {
-    public function execute($accumulator, $value): int
+    public function execute($accumulator): int
     {
-        return $accumulator -= $value;
+        return $accumulator -= $this->value;
     }
 }

@@ -18,13 +18,13 @@ class AutoInsurancePlan extends InsurancePlan
     public function riskRules(): array
     {
         return [
-            new NoIncome($this->userInformation,                    new Deny(),     0),
-            new NoVehicle($this->userInformation,                   new Deny(),     0),
-            new NoHouse($this->userInformation,                     new Deny(),     0),
-            new AgeLowerThan30($this->userInformation,              new Subtract(), 2),
-            new AgeBetween30And40($this->userInformation,           new Subtract(), 1),
-            new IncomeHigherThan200K($this->userInformation,        new Subtract(), 1),
-            new VehicleProducedAtLast5Years($this->userInformation, new Add(),      1)
+            new NoIncome($this->userInformation,                    new Deny()),
+            new NoVehicle($this->userInformation,                   new Deny()),
+            new NoHouse($this->userInformation,                     new Deny()),
+            new AgeLowerThan30($this->userInformation,              new Subtract(2)),
+            new AgeBetween30And40($this->userInformation,           new Subtract(1)),
+            new IncomeHigherThan200K($this->userInformation,        new Subtract(1)),
+            new VehicleProducedAtLast5Years($this->userInformation, new Add(1))
         ];
     }
 }

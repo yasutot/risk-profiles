@@ -4,9 +4,9 @@ namespace App\Processors\Operations;
 
 use App\Exceptions\IneligibleInsurancePlanException;
 
-class Deny implements Operation
+class Deny extends Operation
 {
-    public function execute($accumulator, $value): int
+    public function execute($accumulator): int
     {
         throw new IneligibleInsurancePlanException();
     }

@@ -2,7 +2,15 @@
 
 namespace App\Processors\Operations;
 
-Interface Operation
+
+abstract class Operation implements OperationInterface
 {
-    public function execute($accumulator, $value): int;
+    protected ?int $value = null;
+
+    public function __construct(?int $value = null)
+    {
+        $this->value = $value;
+    }
+
+    public abstract function execute($accumulator): int;
 }

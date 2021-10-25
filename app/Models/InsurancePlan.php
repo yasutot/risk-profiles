@@ -22,9 +22,7 @@ abstract class InsurancePlan
     public function evaluate(): InsurancePlanValue
     {
         try {
-            $baseValue = $this->baseValue();
-
-            $score = $this->riskRuleChain->handle($baseValue);
+            $score = $this->score();
 
             if ($score <= 0) {
                 return InsurancePlanValue::ECONOMIC();
@@ -37,6 +35,13 @@ abstract class InsurancePlan
         } catch (IneligibleInsurancePlanException $e) {
             return InsurancePlanValue::INELIGIBLE();
         }
+    }
+
+    public function score(): int
+    {
+        $baseValue = $this->baseValue();
+
+        return $this->riskRuleChain->handle($baseValue);
     }
 
     protected function baseValue()

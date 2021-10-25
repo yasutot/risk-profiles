@@ -10,13 +10,11 @@ abstract class RiskRuleHandler implements RiskRuleHandlerInterface
     protected ?RiskRuleHandlerInterface $nextHandler = null;
     protected UserInformation $userInformation;
     protected Operation $operation;
-    protected int $value;
 
-    public function __construct(UserInformation $userInformation, Operation $operation, int $value)
+    public function __construct(UserInformation $userInformation, Operation $operation)
     {
         $this->userInformation = $userInformation;
         $this->operation = $operation;
-        $this->value = $value;
     }
 
     public function setNext(RiskRuleHandlerInterface $handler): RiskRuleHandlerInterface
@@ -29,7 +27,7 @@ abstract class RiskRuleHandler implements RiskRuleHandlerInterface
     public function handle($accumulator = 0)
     {
         if ($this->validate()) {
-            $accumulator = $this->operation->execute($accumulator, $this->value);
+            $accumulator = $this->operation->execute($accumulator);
         }
 
         if ($this->nextHandler) {
