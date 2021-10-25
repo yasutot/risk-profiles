@@ -12,7 +12,7 @@ abstract class RiskRuleHandler implements RiskRuleHandlerInterface
     protected Operation $operation;
     protected int $value;
 
-    public function __construct(UserInformation $userInformation, $operation, int $value)
+    public function __construct(UserInformation $userInformation, Operation $operation, int $value)
     {
         $this->userInformation = $userInformation;
         $this->operation = $operation;
