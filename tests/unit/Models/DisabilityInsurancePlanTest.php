@@ -14,6 +14,10 @@ class DisabilityInsurancePlanTest extends TestCase
         $userInformation = $this->createMock(UserInformation::class);
         $insurance = new DisabilityInsurancePlan($userInformation);
 
-        $this->assertInstanceOf(RiskRuleHandler::class, $insurance->riskRuleHandlerChain());
+        $riskRules = $insurance->riskRules();
+
+        foreach ($riskRules as $riskRule) {
+            $this->assertInstanceOf(RiskRuleHandler::class, $riskRule);
+        }
     }
 }

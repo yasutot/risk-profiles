@@ -11,17 +11,18 @@ use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\NoHouse;
 use App\Processors\RiskRules\NoIncome;
 use App\Processors\RiskRules\NoVehicle;
-use App\Processors\RiskRules\RiskRuleHandler;
 
 class HomeInsurancePlan extends InsurancePlan
 {
-    public function riskRuleHandlerChain(): RiskRuleHandler
+    public function riskRules(): array
     {
-        return       (new NoIncome($this->userInformation,             new Deny(),     0))
-            ->setNext(new NoVehicle($this->userInformation,            new Deny(),     0))
-            ->setNext(new NoHouse($this->userInformation,              new Deny(),     0))
-            ->setNext(new AgeLowerThan30($this->userInformation,       new Subtract(), 2))
-            ->setNext(new IncomeHigherThan200K($this->userInformation, new Subtract(), 1))
-            ->setNext(new HouseIsMortgaged($this->userInformation,     new Add(),      1));
+        return [
+            new NoIncome($this->userInformation,             new Deny(),     0),
+            new NoVehicle($this->userInformation,            new Deny(),     0),
+            new NoHouse($this->userInformation,              new Deny(),     0),
+            new AgeLowerThan30($this->userInformation,       new Subtract(), 2),
+            new IncomeHigherThan200K($this->userInformation, new Subtract(), 1),
+            new HouseIsMortgaged($this->userInformation,     new Add(),      1)
+        ];
     }
 }

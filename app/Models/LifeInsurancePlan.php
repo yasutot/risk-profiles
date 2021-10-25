@@ -14,12 +14,14 @@ use App\Processors\RiskRules\RiskRuleHandler;
 
 class LifeInsurancePlan extends InsurancePlan
 {
-    public function riskRuleHandlerChain(): RiskRuleHandler
+    public function riskRules(): array
     {
-        return       (new AgeHigherThan60($this->userInformation,      new Deny(),     0))
-            ->setNext(new AgeLowerThan30($this->userInformation,       new Subtract(), 2))
-            ->setNext(new IncomeHigherThan200K($this->userInformation, new Subtract(), 1))
-            ->setNext(new HasDependents($this->userInformation,        new Add(),      1))
-            ->setNext(new IsMarried($this->userInformation,            new Add(),      1));
+        return [
+            new AgeHigherThan60($this->userInformation,      new Deny(),     0),
+            new AgeLowerThan30($this->userInformation,       new Subtract(), 2),
+            new IncomeHigherThan200K($this->userInformation, new Subtract(), 1),
+            new HasDependents($this->userInformation,        new Add(),      1),
+            new IsMarried($this->userInformation,            new Add(),      1)
+        ];
     }
 }
