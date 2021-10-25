@@ -26,7 +26,7 @@ class NoHouseTest extends TestCase
     {
         $this->userInformation->method('getHouse')->will($this->returnValue($input));
 
-        $riskHandler = new NoHouse($this->userInformation, $this->operation, rand(1,2));
+        $riskHandler = new NoHouse($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskHandler->validate());
     }

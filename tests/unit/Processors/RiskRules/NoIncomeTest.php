@@ -33,7 +33,7 @@ class NoIncomeTest extends TestCase
         foreach ($dataSet as $data) {
             $this->userInformation->method('getIncome')->will($this->returnValue($input));
 
-            $riskHandler = new NoIncome($this->userInformation, $this->operation, rand(1,2));
+            $riskHandler = new NoIncome($this->userInformation, $this->operation);
 
             $this->assertEquals($expected, $riskHandler->validate());
         }

@@ -29,7 +29,7 @@ class VehicleProducedAtLast5YearsTest extends TestCase
         $this->vehicle->method('getYear')->will($this->returnValue($input));
         $this->userInformation->method('getVehicle')->will($this->returnValue($this->vehicle));
 
-        $riskHandler = new VehicleProducedAtLast5Years($this->userInformation, $this->operation, rand(1,2));
+        $riskHandler = new VehicleProducedAtLast5Years($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskHandler->validate());
     }

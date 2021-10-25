@@ -6,6 +6,7 @@ use App\Models\UserInformation;
 use App\Models\Vehicle;
 use App\Processors\Operations\Operation;
 use App\Processors\RiskRules\NoVehicle;
+use App\Processors\RiskRules\VehicleProducedAtLast5Years;
 use TestCase;
 
 class NoVehicleTest extends TestCase
@@ -26,9 +27,18 @@ class NoVehicleTest extends TestCase
     {
         $this->userInformation->method('getVehicle')->will($this->returnValue($input));
 
-        $riskHandler = new NoVehicle($this->userInformation, $this->operation, rand(1,2));
+        $riskHandler = new NoVehicle($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskHandler->validate());
+    }
+
+    public function testValidateWhenUserInformationHasNoVehicle()
+    {
+        $this->userInformation->method('getVehicle')->will($this->returnValue(null));
+
+        $riskRuleHandler = new VehicleProducedAtLast5Years($this->userInformation, $this->operation);
+
+        $this->assertEquals(false, $riskRuleHandler->validate());
     }
 
     public function dataSet()

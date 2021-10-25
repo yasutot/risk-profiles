@@ -28,7 +28,7 @@ class IncomeHigherThan200KTest extends TestCase
     {
         $this->userInformation->method('getIncome')->will($this->returnValue($input));
 
-        $riskHandler = new IncomeHigherThan200K($this->userInformation, $this->operation, rand(1,2));
+        $riskHandler = new IncomeHigherThan200K($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskHandler->validate());
     }

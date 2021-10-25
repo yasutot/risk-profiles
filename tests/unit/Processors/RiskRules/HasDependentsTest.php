@@ -28,7 +28,7 @@ class HasDependentsTest extends TestCase
     {
         $this->userInformation->method('getDependents')->will($this->returnValue($input));
 
-        $riskRuleHandler = new HasDependents($this->userInformation, $this->operation, rand(1,2));
+        $riskRuleHandler = new HasDependents($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskRuleHandler->validate());
     }

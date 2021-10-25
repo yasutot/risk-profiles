@@ -19,7 +19,7 @@ class RiskRuleHandlerTest extends TestCase
         $this->operation = $this->createMock(Operation::class);
 
         $this->riskHandler = $this->getMockForAbstractClass(
-            RiskRuleHandler::class, [$this->userInformation, $this->operation, 2]
+            RiskRuleHandler::class, [$this->userInformation, $this->operation]
         );
     }
 

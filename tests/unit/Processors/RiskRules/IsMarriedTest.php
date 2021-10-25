@@ -26,7 +26,7 @@ class IsMarriedTest extends TestCase
     {
         $this->userInformation->method('getMaritalStatus')->will($this->returnValue($input));
 
-        $riskRuleHandler = new IsMarried($this->userInformation, $this->operation, rand(1,2));
+        $riskRuleHandler = new IsMarried($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskRuleHandler->validate());
     }

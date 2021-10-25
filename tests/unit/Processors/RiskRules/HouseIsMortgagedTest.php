@@ -30,9 +30,18 @@ class HouseIsMortgagedTest extends TestCase
         $this->house->method('getOwnershipStatus')->will($this->returnValue($input));
         $this->userInformation->method('getHouse')->will($this->returnValue($this->house));
 
-        $riskRuleHandler = new HouseIsMortgaged($this->userInformation, $this->operation, rand(1,2));
+        $riskRuleHandler = new HouseIsMortgaged($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskRuleHandler->validate());
+    }
+
+    public function testValidateWhenUserInformationHasNoHouse()
+    {
+        $this->userInformation->method('getHouse')->will($this->returnValue(null));
+
+        $riskRuleHandler = new HouseIsMortgaged($this->userInformation, $this->operation);
+
+        $this->assertEquals(false, $riskRuleHandler->validate());
     }
 
     public function dataSet()

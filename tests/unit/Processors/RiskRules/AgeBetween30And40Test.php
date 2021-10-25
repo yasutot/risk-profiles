@@ -31,7 +31,7 @@ class AgeBetween30And40Test extends TestCase
     {
         $this->userInformation->method('getAge')->will($this->returnValue($input));
 
-        $riskRuleHandler = new AgeBetween30And40($this->userInformation, $this->operation, 1);
+        $riskRuleHandler = new AgeBetween30And40($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskRuleHandler->validate());
     }

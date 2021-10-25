@@ -28,7 +28,7 @@ class AgeHigherThan60Test extends TestCase
     {
         $this->userInformation->method('getAge')->will($this->returnValue($input));
 
-        $riskRuleHandler = new AgeHigherThan60($this->userInformation, $this->operation, rand(1,2));
+        $riskRuleHandler = new AgeHigherThan60($this->userInformation, $this->operation);
 
         $this->assertEquals($expected, $riskRuleHandler->validate());
     }
