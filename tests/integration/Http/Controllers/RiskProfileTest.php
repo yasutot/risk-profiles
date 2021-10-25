@@ -2,7 +2,9 @@
 
 namespace Test\Integration\Http\Controllers;
 
+use App\Enums\HouseOwnershipStatus;
 use App\Enums\InsurancePlanValue;
+use App\Enums\MaritalStatus;
 use TestCase;
 
 class RiskProfileTest extends TestCase
@@ -67,18 +69,23 @@ class RiskProfileTest extends TestCase
 
     public function requestBody(array $modifiers = null)
     {
+        $maritalStatuses = array_values(MaritalStatus::toArray());
+        $randomMaritalStatus = $maritalStatuses[array_rand($maritalStatuses)];
+
+        $houseOwnerShipStatuses = array_values(HouseOwnershipStatus::toArray());
+        $randomHouseOwnershipStatus = $houseOwnerShipStatuses[array_rand($houseOwnerShipStatuses)];
+
         $body = [
-            'age' => 41,
-            'dependents' => 3,
-            'income' => 10000,
-            'marital_status' => 'single',
-            'house_ownership' => ['status' => 'owned'],
-            'risk_questions' => [1, 1, 1],
+            'age' => rand(1, 100),
+            'dependents' => rand(0, 10),
+            'income' => rand(200000, 200001),
+            'marital_status' => $randomMaritalStatus,
+            'risk_questions' => [rand(0, 1), rand(0, 1), rand(0, 1)],
             'vehicle' => [
                 'year' => date('Y')
             ],
             'house' => [
-                'ownership_status' => 'owned'
+                'ownership_status' => $randomHouseOwnershipStatus
             ]
         ];
 
