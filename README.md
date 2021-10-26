@@ -6,11 +6,12 @@
 
 This project was structured to run the application with Docker, orchestrated via docker-compose.
 
-Execute this commands to build an start the application using docker in port 8080:
+Execute this commands to build, start the application using docker in port 8080, and install its dependencies:
 
 ```
 make docker-build
 make docker-start
+make docker-composer-install
 ```
 
 ### Locally
@@ -19,6 +20,12 @@ If you wish to run it locally, run this command and the application should start
 
 ```
 make start
+```
+
+Then install the application's dependencies:
+
+```
+composer install
 ```
 
 ## Testing
