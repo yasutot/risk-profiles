@@ -11,7 +11,6 @@ use App\Processors\RiskRules\AgeLowerThan30;
 use App\Processors\RiskRules\HasDependents;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\IsMarried;
-use App\Processors\RiskRules\RiskRuleHandler;
 
 class LifeInsurancePlan extends InsurancePlan
 {
