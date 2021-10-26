@@ -13,6 +13,9 @@ tinker:
 docker-build:
 	docker-compose build
 
+docker-composer-install:
+	docker-compose exec app composer install
+
 docker-start:
 	docker-compose up -d
 
