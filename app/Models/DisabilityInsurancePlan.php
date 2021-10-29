@@ -12,9 +12,7 @@ use App\Processors\RiskRules\HasDependents;
 use App\Processors\RiskRules\HouseIsMortgaged;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\IsMarried;
-use App\Processors\RiskRules\NoHouse;
 use App\Processors\RiskRules\NoIncome;
-use App\Processors\RiskRules\NoVehicle;
 
 class DisabilityInsurancePlan extends InsurancePlan
 {
@@ -22,8 +20,6 @@ class DisabilityInsurancePlan extends InsurancePlan
     {
         return [
             new NoIncome($this->userInformation,             new Deny()),
-            new NoVehicle($this->userInformation,            new Deny()),
-            new NoHouse($this->userInformation,              new Deny()),
             new AgeHigherThan60($this->userInformation,      new Deny()),
             new AgeLowerThan30($this->userInformation,       new Subtract(2)),
             new AgeBetween30And40($this->userInformation,    new Subtract(1)),

@@ -18,8 +18,6 @@ class HomeInsurancePlan extends InsurancePlan
     public function riskRules(): array
     {
         return [
-            new NoIncome($this->userInformation,             new Deny()),
-            new NoVehicle($this->userInformation,            new Deny()),
             new NoHouse($this->userInformation,              new Deny()),
             new AgeLowerThan30($this->userInformation,       new Subtract(2)),
             new AgeBetween30And40($this->userInformation,    new Subtract(1)),
