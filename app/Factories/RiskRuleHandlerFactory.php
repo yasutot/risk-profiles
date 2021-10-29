@@ -8,11 +8,10 @@ class RiskRuleHandlerFactory
 {
     public static function createChain($rules): RiskRuleHandler
     {
-        $firstRule = array_shift($rules);
+        for ($index = 1; $index < count($rules); $index++) { 
+            $rules[$index-1]->setNext($rules[$index]);
+        }
 
-        return array_reduce($rules, function($chain, $rule) {
-            $chain->setNext($rule);
-            return $chain;
-        }, $firstRule);
+        return $rules[0];
     }
 }

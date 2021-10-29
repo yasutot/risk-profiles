@@ -10,8 +10,6 @@ use App\Processors\RiskRules\AgeLowerThan30;
 use App\Processors\RiskRules\HouseIsMortgaged;
 use App\Processors\RiskRules\IncomeHigherThan200K;
 use App\Processors\RiskRules\NoHouse;
-use App\Processors\RiskRules\NoIncome;
-use App\Processors\RiskRules\NoVehicle;
 
 class HomeInsurancePlan extends InsurancePlan
 {

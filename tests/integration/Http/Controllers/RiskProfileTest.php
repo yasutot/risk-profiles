@@ -18,12 +18,11 @@ class RiskProfileTest extends TestCase
         $this->seeJson();
 
         $responseBody = json_decode($response);
-        $expectedValues = array_values(InsurancePlanValue::toArray());
 
-        $this->assertContains($responseBody->auto, $expectedValues);
-        $this->assertContains($responseBody->life, $expectedValues);
-        $this->assertContains($responseBody->disability, $expectedValues);
-        $this->assertContains($responseBody->home, $expectedValues);
+        $this->assertEquals($responseBody->auto, 'regular');
+        $this->assertEquals($responseBody->disability, 'ineligible');
+        $this->assertEquals($responseBody->home, 'economic');
+        $this->assertEquals($responseBody->life, 'regular');
     }
 
     public function testCreateWhenBodyIsEmpty()
@@ -69,24 +68,14 @@ class RiskProfileTest extends TestCase
 
     public function requestBody(array $modifiers = null)
     {
-        $maritalStatuses = array_values(MaritalStatus::toArray());
-        $randomMaritalStatus = $maritalStatuses[array_rand($maritalStatuses)];
-
-        $houseOwnerShipStatuses = array_values(HouseOwnershipStatus::toArray());
-        $randomHouseOwnershipStatus = $houseOwnerShipStatuses[array_rand($houseOwnerShipStatuses)];
-
         $body = [
-            'age' => rand(1, 100),
-            'dependents' => rand(0, 10),
-            'income' => rand(200000, 200001),
-            'marital_status' => $randomMaritalStatus,
-            'risk_questions' => [rand(0, 1), rand(0, 1), rand(0, 1)],
-            'vehicle' => [
-                'year' => date('Y')
-            ],
-            'house' => [
-                'ownership_status' => $randomHouseOwnershipStatus
-            ]
+            'age' => 35,
+            'dependents' => 2,
+            'house' => ['ownership_status' => 'owned'],
+            'income' => 0,
+            'marital_status' => 'married',
+            'risk_questions' => [0, 1, 0],
+            'vehicle' => ['year' => 2018]
         ];
 
         if ($modifiers === null) {
